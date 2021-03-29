@@ -30,10 +30,6 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
   Artboard _riveArtboard;
-  Widget bright = Icon(
-    Icons.brightness_1_outlined,
-    size: 20,
-  );
 
   @override
   void initState() {
@@ -57,40 +53,41 @@ class _MyHomePageState extends State<MyHomePage>
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Text('Вертикальный слайдер с Rive анимацией'),
+            Text('Vertical slider with Rive\'s animation'),
             Padding(padding: EdgeInsets.only(bottom: 20)),
             FillingSlider(
-                initialCount: 0.9,
+                initialValue: 0.9,
                 onChange: onChangeWithRive,
                 child: SizedBox(
                   height: 60,
                   width: 60,
-                  child: Rive(artboard: _riveArtboard, fit: BoxFit.cover),
+                  child: _riveArtboard == null
+                      ? Container()
+                      : Rive(artboard: _riveArtboard, fit: BoxFit.cover),
                 )),
             Padding(padding: EdgeInsets.only(bottom: 40)),
-            Text('Горизонтальный слайдер со сменой иконок AnimatedSwitcher'),
+            Text('Horizontal slider with icons and AnimationSwitcher'),
             Padding(padding: EdgeInsets.only(bottom: 20)),
             FillingSlider(
-                onChange: onChange,
-                initialCount: 0.5,
+                initialValue: 0.9,
                 width: 150,
                 height: 40,
                 direction: FillingSliderDirection.horizontal,
-                child: AnimatedSwitcher(
-                  layoutBuilder:
-                      (Widget currentChild, List<Widget> previousChildren) {
-                    return currentChild;
-                  },
-                  duration: Duration(seconds: 1),
-                  child: bright,
-                )),
+                childBuilder: (ctx, value) => AnimatedSwitcher(
+                      layoutBuilder:
+                          (Widget currentChild, List<Widget> previousChildren) {
+                        return currentChild;
+                      },
+                      duration: Duration(seconds: 1),
+                      child: getIcon(value),
+                    )),
           ],
         ),
       ),
     );
   }
 
-  void onChangeWithRive(newVal, old) {
+  void onChangeWithRive(double newVal, double old) {
     List triggers = [1.0, 0.7, 0.3, 0.0];
     var start = 3;
     var end = 1;
@@ -109,17 +106,9 @@ class _MyHomePageState extends State<MyHomePage>
     _riveArtboard.addController(SimpleAnimation('$start-$end'));
   }
 
-  onChange(newVal, old) {
-    if (newVal < 0.3) {
-      setState(() {
-        bright = Icon(Icons.brightness_3_outlined, size: 20, key: ValueKey(3));
-      });
-      return;
-    }
-    setState(() {
-      bright = newVal > 0.7
-          ? Icon(Icons.brightness_2_outlined, size: 20, key: ValueKey(1))
-          : Icon(Icons.brightness_1_outlined, size: 20, key: ValueKey(2));
-    });
+  Widget getIcon(double newVal) {
+    return newVal > 0.5
+        ? Icon(Icons.brightness_2_outlined, size: 20, key: ValueKey(1))
+        : Icon(Icons.brightness_1_outlined, size: 20, key: ValueKey(2));
   }
 }
