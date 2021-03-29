@@ -37,7 +37,7 @@ class _MyHomePageState extends State<MyHomePage>
 
   @override
   void initState() {
-    rootBundle.load('volume.riv').then(
+    rootBundle.load('assets/volume.riv').then(
       (data) {
         final file = RiveFile();
         file.import(data);
