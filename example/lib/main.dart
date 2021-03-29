@@ -47,25 +47,6 @@ class _MyHomePageState extends State<MyHomePage>
     super.initState();
   }
 
-  void onChange(newVal, old) {
-    List triggers = [1.0, 0.7, 0.3, 0.0];
-    var start = 3;
-    var end = 1;
-    for (var i = 0; i < triggers.length - 1; i++) {
-      if (newVal == 0) {
-        end = 0;
-      } else if (newVal <= triggers[i] && newVal >= triggers[i + 1]) {
-        end = 3 - i;
-      }
-      if (old == 0) {
-        start = 0;
-      } else if (old <= triggers[i] && old >= triggers[i + 1]) {
-        start = 3 - i;
-      }
-    }
-    _riveArtboard.addController(SimpleAnimation('$start-$end'));
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -77,21 +58,20 @@ class _MyHomePageState extends State<MyHomePage>
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
             Text('Вертикальный слайдер с Rive анимацией'),
+            Padding(padding: EdgeInsets.only(bottom: 20)),
             FillingSlider(
                 initialCount: 0.9,
-                onChange: onChange,
+                onChange: onChangeWithRive,
                 child: SizedBox(
                   height: 60,
                   width: 60,
                   child: Rive(artboard: _riveArtboard, fit: BoxFit.cover),
                 )),
-            Text('Вертикальный слайдер без иконки'),
+            Padding(padding: EdgeInsets.only(bottom: 40)),
+            Text('Горизонтальный слайдер со сменой иконок AnimatedSwitcher'),
+            Padding(padding: EdgeInsets.only(bottom: 20)),
             FillingSlider(
-              initialCount: 0.7,
-            ),
-            Text('Горизонтальный слайдер со сменой иконок'),
-            FillingSlider(
-                onChange: onChange2,
+                onChange: onChange,
                 initialCount: 0.5,
                 width: 150,
                 height: 40,
@@ -110,7 +90,26 @@ class _MyHomePageState extends State<MyHomePage>
     );
   }
 
-  onChange2(newVal, old) {
+  void onChangeWithRive(newVal, old) {
+    List triggers = [1.0, 0.7, 0.3, 0.0];
+    var start = 3;
+    var end = 1;
+    for (var i = 0; i < triggers.length - 1; i++) {
+      if (newVal == 0) {
+        end = 0;
+      } else if (newVal <= triggers[i] && newVal >= triggers[i + 1]) {
+        end = 3 - i;
+      }
+      if (old == 0) {
+        start = 0;
+      } else if (old <= triggers[i] && old >= triggers[i + 1]) {
+        start = 3 - i;
+      }
+    }
+    _riveArtboard.addController(SimpleAnimation('$start-$end'));
+  }
+
+  onChange(newVal, old) {
     if (newVal < 0.3) {
       setState(() {
         bright = Icon(Icons.brightness_3_outlined, size: 20, key: ValueKey(3));
