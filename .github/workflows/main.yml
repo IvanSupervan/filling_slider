@@ -14,4 +14,4 @@ jobs:
       - uses: erickzanardo/flutter-gh-pages@v3
         with:
           workingDir: example
-          web-renderer: html
+          webRenderer: html
