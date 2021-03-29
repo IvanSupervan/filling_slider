@@ -1,0 +1,24 @@
+name: example
+description: Example of use Background Slider
+version: 1.0.0+1
+publish_to: 'none'
+
+environment:
+  sdk: ">=2.7.0 <3.0.0"
+
+dependencies:
+  flutter:
+    sdk: flutter
+  cupertino_icons: ^1.0.2
+  rive: ^0.6.8
+  filling_slider:
+     path: ./../../filling_slider
+
+dev_dependencies:
+  flutter_test:
+    sdk: flutter
+
+flutter:
+  uses-material-design: true
+  assets:
+    - assets/volume.riv
