@@ -1,38 +1,47 @@
 import 'package:flutter/material.dart';
 
 enum FillingSliderDirection { vertical, horizontal }
+typedef ChangeCallback = void Function(double newValue, double oldValue);
+typedef ChildBuilder = Widget Function(BuildContext context, double value);
 
 class FillingSlider extends StatefulWidget {
-  /// Creates a vertical slider in IOS settings style.
-  final double initialCount;
-  final Function onChange;
-  final FillingSliderDirection direction;
-  final double height;
-  final double width;
-  final Color background;
-  final Color activeBackground;
-  final Widget child;
+  /// Creates a IOS-like slider
   FillingSlider(
       {Key key,
-      this.initialCount = 1.0,
+      this.initialValue = 1.0,
       this.onChange,
       this.direction = FillingSliderDirection.vertical,
-      this.background = const Color.fromRGBO(46, 45, 36, 0.5),
-      this.activeBackground = const Color.fromRGBO(215, 216, 218, 0.3),
+      this.color = const Color.fromRGBO(46, 45, 36, 0.5),
+      this.fillColor = const Color.fromRGBO(215, 216, 218, 0.3),
       this.child,
+      this.childBuilder,
       this.width = 80,
       this.height = 200})
       : super(key: key);
+
+  /// Initial value of slider  1.0 <= value >= 0.0
+  final double initialValue;
+
+  /// Change callback, send new and old value
+  final ChangeCallback onChange;
+  final FillingSliderDirection direction;
+  final double height;
+  final double width;
+  final Color color;
+  final Color fillColor;
+  final ChildBuilder childBuilder;
+  final Widget child;
+
   @override
   _FillingSliderState createState() => _FillingSliderState();
 }
 
 class _FillingSliderState extends State<FillingSlider> {
-  double stateY;
+  double stateValue;
 
   @override
   void initState() {
-    stateY = widget.initialCount;
+    stateValue = widget.initialValue;
     super.initState();
   }
 
@@ -44,23 +53,25 @@ class _FillingSliderState extends State<FillingSlider> {
   }
 
   void updateData(double position) {
-    double currentY = double.parse((1 -
-            (position /
-                (widget.direction == FillingSliderDirection.horizontal
-                    ? widget.width
-                    : widget.height)))
-        .toStringAsFixed(2));
-    if (currentY > 1) {
-      currentY = 1;
-    } else if (currentY < 0) {
-      currentY = 0;
+    double currentValue =
+        double.parse((1 - (position / getMainAxisSize())).toStringAsFixed(2));
+    if (currentValue > 1) {
+      currentValue = 1;
+    } else if (currentValue < 0) {
+      currentValue = 0;
     }
     if (widget.onChange != null) {
-      widget.onChange(currentY, stateY);
+      widget.onChange(currentValue, stateValue);
     }
     setState(() {
-      stateY = currentY;
+      stateValue = currentValue;
     });
+  }
+
+  double getMainAxisSize() {
+    return widget.direction == FillingSliderDirection.horizontal
+        ? widget.width
+        : widget.height;
   }
 
   Widget getHorizontal() {
@@ -79,11 +90,11 @@ class _FillingSliderState extends State<FillingSlider> {
                 begin: Alignment.centerLeft,
                 end: Alignment.centerRight,
                 colors: [
-                  widget.background,
-                  widget.activeBackground
+                  widget.color,
+                  widget.fillColor
                 ],
                 stops: [
-                  1 - stateY,
+                  1 - stateValue,
                   0,
                 ]),
             borderRadius: BorderRadiusDirectional.circular(20)),
@@ -91,6 +102,9 @@ class _FillingSliderState extends State<FillingSlider> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             widget.child == null ? Container() : widget.child,
+            widget.childBuilder == null
+                ? Container()
+                : widget.childBuilder(context, stateValue),
             Padding(padding: EdgeInsets.only(right: 12))
           ],
         ),
@@ -114,11 +128,11 @@ class _FillingSliderState extends State<FillingSlider> {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: [
-                  widget.background,
-                  widget.activeBackground
+                  widget.color,
+                  widget.fillColor
                 ],
                 stops: [
-                  1 - stateY,
+                  1 - stateValue,
                   0,
                 ]),
             borderRadius: BorderRadiusDirectional.circular(20)),
@@ -126,6 +140,9 @@ class _FillingSliderState extends State<FillingSlider> {
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
             widget.child == null ? Container() : widget.child,
+            widget.childBuilder == null
+                ? Container()
+                : widget.childBuilder(context, stateValue),
             Padding(padding: EdgeInsets.only(bottom: 12))
           ],
         ),
