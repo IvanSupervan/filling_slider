@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 
 enum FillingSliderDirection { vertical, horizontal }
 typedef ChangeCallback = void Function(double newValue, double oldValue);
+typedef FinishCallback = void Function(double value);
 typedef ChildBuilder = Widget Function(BuildContext context, double value);
 
 class FillingSlider extends StatefulWidget {
@@ -10,6 +11,7 @@ class FillingSlider extends StatefulWidget {
       {Key key,
       this.initialValue = 1.0,
       this.onChange,
+      this.onFinish,
       this.direction = FillingSliderDirection.vertical,
       this.color = const Color.fromRGBO(46, 45, 36, 0.5),
       this.fillColor = const Color.fromRGBO(215, 216, 218, 0.3),
@@ -22,8 +24,11 @@ class FillingSlider extends StatefulWidget {
   /// Initial value of slider  1.0 <= value >= 0.0
   final double initialValue;
 
-  /// Change callback, send new and old value
+  /// Change callback
   final ChangeCallback onChange;
+
+  /// End of changes callback
+  final FinishCallback onFinish;
   final FillingSliderDirection direction;
   final double height;
   final double width;
@@ -79,8 +84,16 @@ class _FillingSliderState extends State<FillingSlider> {
       onHorizontalDragUpdate: (details) {
         updateData(details.localPosition.dx);
       },
+      onHorizontalDragEnd: (details) {
+        if (widget.onFinish != null) {
+          widget.onFinish(stateValue);
+        }
+      },
       onTapUp: (details) {
         updateData(details.localPosition.dx);
+        if (widget.onFinish != null) {
+          widget.onFinish(stateValue);
+        }
       },
       child: Container(
         height: widget.height,
@@ -117,8 +130,16 @@ class _FillingSliderState extends State<FillingSlider> {
       onVerticalDragUpdate: (details) {
         updateData(details.localPosition.dy);
       },
+      onVerticalDragEnd: (details) {
+        if (widget.onFinish != null) {
+          widget.onFinish(stateValue);
+        }
+      },
       onTapUp: (details) {
         updateData(details.localPosition.dy);
+        if (widget.onFinish != null) {
+          widget.onFinish(stateValue);
+        }
       },
       child: Container(
         height: widget.height,
