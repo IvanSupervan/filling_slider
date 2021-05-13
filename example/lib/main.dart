@@ -19,9 +19,9 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  MyHomePage({Key key, this.title}) : super(key: key);
+  MyHomePage({Key? key, this.title}) : super(key: key);
 
-  final String title;
+  final String? title;
 
   @override
   _MyHomePageState createState() => _MyHomePageState();
@@ -29,14 +29,13 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage>
     with SingleTickerProviderStateMixin {
-  Artboard _riveArtboard;
+  Artboard? _riveArtboard;
 
   @override
   void initState() {
     rootBundle.load('assets/volume.riv').then(
       (data) {
-        final file = RiveFile();
-        file.import(data);
+        final file = RiveFile.import(data);
         setState(() => _riveArtboard = file.mainArtboard);
       },
     );
@@ -47,7 +46,7 @@ class _MyHomePageState extends State<MyHomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
+        title: Text(widget.title!),
       ),
       body: Center(
         child: Column(
@@ -63,7 +62,7 @@ class _MyHomePageState extends State<MyHomePage>
                   width: 60,
                   child: _riveArtboard == null
                       ? Container()
-                      : Rive(artboard: _riveArtboard, fit: BoxFit.cover),
+                      : Rive(artboard: _riveArtboard!, fit: BoxFit.cover),
                 )),
             Padding(padding: EdgeInsets.only(bottom: 40)),
             Text('Horizontal slider with icons and AnimationSwitcher'),
@@ -74,9 +73,9 @@ class _MyHomePageState extends State<MyHomePage>
                 height: 40,
                 direction: FillingSliderDirection.horizontal,
                 childBuilder: (ctx, value) => AnimatedSwitcher(
-                      layoutBuilder:
-                          (Widget currentChild, List<Widget> previousChildren) {
-                        return currentChild;
+                      layoutBuilder: (Widget? currentChild,
+                          List<Widget> previousChildren) {
+                        return currentChild!;
                       },
                       duration: Duration(seconds: 1),
                       child: getIcon(value),
@@ -103,7 +102,7 @@ class _MyHomePageState extends State<MyHomePage>
         start = 3 - i;
       }
     }
-    _riveArtboard.addController(SimpleAnimation('$start-$end'));
+    _riveArtboard!.addController(SimpleAnimation('$start-$end'));
   }
 
   Widget getIcon(double newVal) {

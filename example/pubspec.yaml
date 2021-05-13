@@ -4,13 +4,13 @@ version: 1.0.0+1
 publish_to: 'none'
 
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.12.0 <3.0.0"
 
 dependencies:
   flutter:
     sdk: flutter
   cupertino_icons: ^1.0.2
-  rive: ^0.6.8
+  rive: ^0.7.9
   filling_slider:
      path: ./../../filling_slider
 

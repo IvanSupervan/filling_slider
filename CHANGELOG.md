@@ -1,3 +1,16 @@
-## [0.0.1] - TODO: Add release date.
+## 0.0.3
 
-* TODO: Describe initial release.
+- Add Support sound null safety
+
+
+## 0.0.2
+
+Initial Version of the library.
+
+- Add ```onFinish``` callback
+- Update documentation
+
+
+## 0.0.1
+
+Initial Version of the library.

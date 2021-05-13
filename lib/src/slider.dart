@@ -8,7 +8,7 @@ typedef ChildBuilder = Widget Function(BuildContext context, double value);
 class FillingSlider extends StatefulWidget {
   /// Creates a IOS-like slider
   FillingSlider(
-      {Key key,
+      {Key? key,
       this.initialValue = 1.0,
       this.onChange,
       this.onFinish,
@@ -25,24 +25,24 @@ class FillingSlider extends StatefulWidget {
   final double initialValue;
 
   /// Change callback
-  final ChangeCallback onChange;
+  final ChangeCallback? onChange;
 
   /// End of changes callback
-  final FinishCallback onFinish;
+  final FinishCallback? onFinish;
   final FillingSliderDirection direction;
   final double height;
   final double width;
   final Color color;
   final Color fillColor;
-  final ChildBuilder childBuilder;
-  final Widget child;
+  final ChildBuilder? childBuilder;
+  final Widget? child;
 
   @override
   _FillingSliderState createState() => _FillingSliderState();
 }
 
 class _FillingSliderState extends State<FillingSlider> {
-  double stateValue;
+  double? stateValue;
 
   @override
   void initState() {
@@ -66,7 +66,7 @@ class _FillingSliderState extends State<FillingSlider> {
       currentValue = 0;
     }
     if (widget.onChange != null) {
-      widget.onChange(currentValue, stateValue);
+      widget.onChange!(currentValue, stateValue!);
     }
     setState(() {
       stateValue = currentValue;
@@ -86,13 +86,13 @@ class _FillingSliderState extends State<FillingSlider> {
       },
       onHorizontalDragEnd: (details) {
         if (widget.onFinish != null) {
-          widget.onFinish(stateValue);
+          widget.onFinish!(stateValue!);
         }
       },
       onTapUp: (details) {
         updateData(details.localPosition.dx);
         if (widget.onFinish != null) {
-          widget.onFinish(stateValue);
+          widget.onFinish!(stateValue!);
         }
       },
       child: Container(
@@ -107,17 +107,17 @@ class _FillingSliderState extends State<FillingSlider> {
                   widget.fillColor
                 ],
                 stops: [
-                  1 - stateValue,
+                  1 - stateValue!,
                   0,
                 ]),
             borderRadius: BorderRadiusDirectional.circular(20)),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            widget.child == null ? Container() : widget.child,
+            widget.child == null ? Container() : widget.child!,
             widget.childBuilder == null
                 ? Container()
-                : widget.childBuilder(context, stateValue),
+                : widget.childBuilder!(context, stateValue!),
             Padding(padding: EdgeInsets.only(right: 12))
           ],
         ),
@@ -132,13 +132,13 @@ class _FillingSliderState extends State<FillingSlider> {
       },
       onVerticalDragEnd: (details) {
         if (widget.onFinish != null) {
-          widget.onFinish(stateValue);
+          widget.onFinish!(stateValue!);
         }
       },
       onTapUp: (details) {
         updateData(details.localPosition.dy);
         if (widget.onFinish != null) {
-          widget.onFinish(stateValue);
+          widget.onFinish!(stateValue!);
         }
       },
       child: Container(
@@ -153,17 +153,17 @@ class _FillingSliderState extends State<FillingSlider> {
                   widget.fillColor
                 ],
                 stops: [
-                  1 - stateValue,
+                  1 - stateValue!,
                   0,
                 ]),
             borderRadius: BorderRadiusDirectional.circular(20)),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.end,
           children: [
-            widget.child == null ? Container() : widget.child,
+            widget.child == null ? Container() : widget.child!,
             widget.childBuilder == null
                 ? Container()
-                : widget.childBuilder(context, stateValue),
+                : widget.childBuilder!(context, stateValue!),
             Padding(padding: EdgeInsets.only(bottom: 12))
           ],
         ),
